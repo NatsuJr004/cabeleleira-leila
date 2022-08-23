@@ -5,5 +5,6 @@ import UserController from '../controllers/userController';
 userRoutes.post('/user', UserController.createUser);
 userRoutes.get('/users', UserController.readAllUsers);
 userRoutes.delete('/user', UserController.deleteUser);
+userRoutes.put('/user', UserController.updateUser);
 
 export default userRoutes;

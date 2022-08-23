@@ -36,6 +36,32 @@ class UserController{
         }
     }
 
+    async updateUser(req, res){
+        const { id, name, email } = req.body;
+
+        try{
+            const userRepository = (await Database).getRepository(User);
+            const userUpdate = await userRepository.findOneBy({
+                id: id
+            })
+
+            if(userUpdate == null){
+                console.log('usuario não encontrado!');
+                return res.status(404).json({message: 'user not found'})
+            }
+            
+            userUpdate.name = name;
+            userUpdate.email = email;
+
+            await userRepository.save(userUpdate);
+            return res.status(200).json({message: 'changed data'});
+        }catch(err){
+
+            console.log(err);
+            return res.status(500).json({message: 'error'});
+        }
+    }
+
     async deleteUser(req, res){
         try{
             const userRepository = (await Database).getRepository(User);
