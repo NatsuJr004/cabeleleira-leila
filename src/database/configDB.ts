@@ -13,3 +13,5 @@ const Database = new DataSource({
     synchronize: true,
     logging: false,
 })
+
+export default Database.initialize();

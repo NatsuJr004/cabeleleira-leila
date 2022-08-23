@@ -1,0 +1,11 @@
+## Anotações sobre o banco de dados
+
+caso de algum erro parecido com o abaixo:
+    
+    - Client does not support authentication protocol requested by server; consider upgrading MySQL client
+Tente concertar com o comando mysql abaixo:
+
+```ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';```
+    
+- Onde ```root``` como seu usuário localhostcomo seu URL e passwordcomo sua senha
+- Após o comando acima execute: ```flush privileges```para que atualize os privilégios do usuario
