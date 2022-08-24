@@ -1,3 +1,9 @@
+## a fazeres:
+[] autenticação
+[] tratamento de erros
+[] login
+[] etc...
+
 ## Anotações sobre o banco de dados
 
 caso de algum erro parecido com o abaixo:

@@ -1,18 +1,18 @@
 import { Scheduling } from '../models/modelScheduling';
 import Database from '../database/configDB';
 import { createHash } from '../utils/hash';
-import { off } from 'process';
-// import { createQueryBuilder } from 'typeorm';
 
 class SchedulingController{
     async createScheduling(req, res){
-        const { idUser, title, description} = req.body;
+        const { idUser, title, description, appointmentDate, appointmentTime} = req.body;
         try{
             const scheduling = new Scheduling();
             scheduling.title = title;
             scheduling.description = description;
             scheduling.serviceStatus = "pending";
             scheduling.user = idUser;
+            scheduling.appointmentDate = appointmentDate;
+            scheduling.appointmentTime = appointmentTime;
 
             const schedulingRepository = (await Database).getRepository(Scheduling);
             await schedulingRepository.save(scheduling);

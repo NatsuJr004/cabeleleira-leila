@@ -15,6 +15,12 @@ export class Scheduling{
     @Column()
     serviceStatus: string
 
+    @Column()
+    appointmentDate: string //yyyy-mm-dd
+
+    @Column()
+    appointmentTime: string //hh-mn
+
     @ManyToOne(() => User, (user) => user.schedulings, {
         onDelete: "CASCADE"
     })
