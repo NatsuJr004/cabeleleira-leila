@@ -55,7 +55,6 @@ class UserController{
             })
 
             if(userUpdate == null){
-                console.log('usuario não encontrado!');
                 return res.status(404).json({message: 'user not found'})
             }
             
@@ -93,6 +92,11 @@ class UserController{
         try{
             const userRepository = (await Database).getRepository(User);
             const userRemove = await userRepository.findOneBy({id: req.body.id});
+
+            if(userRemove == null){
+                return res.status(500).json({message: 'user not found'});
+            }
+
             await userRepository.remove(userRemove);
             return res.status(200).json({message: 'success'})
         }catch(err){

@@ -11,9 +11,6 @@ export class Scheduling{
 
     @Column()
     description: string
-
-    @Column()
-    scheduleState: string
     
     @Column()
     serviceStatus: string
