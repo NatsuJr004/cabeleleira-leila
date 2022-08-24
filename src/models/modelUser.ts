@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Scheduling } from './modelScheduling'
 
 @Entity()
-
 export class User{
     @PrimaryGeneratedColumn("uuid")
-    id: number
+    id: string
 
     @Column()
     name: string
@@ -17,4 +17,7 @@ export class User{
 
     @Column()
     isAdmin: boolean
+
+    @OneToMany(() => Scheduling, (scheduling) => scheduling.user, {eager: true})
+    schedulings: Scheduling[]
 }

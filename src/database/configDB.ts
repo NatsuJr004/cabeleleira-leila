@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "../models/modelUser";
+import { Scheduling } from "../models/modelScheduling";
 
 const Database = new DataSource({
     type: 'mysql',
@@ -9,7 +10,7 @@ const Database = new DataSource({
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
-    entities: [User],
+    entities: [User, Scheduling],
     synchronize: true,
     logging: false,
 })

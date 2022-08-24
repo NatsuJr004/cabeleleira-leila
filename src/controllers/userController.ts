@@ -1,17 +1,26 @@
 import { User } from '../models/modelUser';
 import Database from '../database/configDB';
+import { createHash } from '../utils/hash';
 
 class UserController{
     async createUser(req, res){
         const { name, isAdmin, email, password } = req.body;
         
-        const newUser = new User();
-        newUser.name = name;
-        newUser.isAdmin = isAdmin;
-        newUser.email = email;
-        newUser.password = password;
-
         try{
+            const newUser = new User();
+            newUser.name = name;
+            newUser.isAdmin = isAdmin;
+            newUser.email = email;
+            
+            const hashPassowd = await createHash(password);
+            
+            if(!hashPassowd[0]){
+                console.log(hashPassowd[1]);
+                return  res.status(500).json({message: 'error!'}); 
+            }
+            
+            newUser.password = hashPassowd[1];
+            
             const userRepository = (await Database).getRepository(User);
             await userRepository.save(newUser);
             return res.status(200).json({message: 'funcionou!'});
@@ -62,6 +71,24 @@ class UserController{
         }
     }
 
+    async readUser(req, res){
+        try{
+            const userRepository = (await Database).getRepository(User);
+            const user = await userRepository.findOneBy({
+                id: req.params.id
+            })
+
+            if(user == null){
+                return res.status(404).json({message: 'user not found!'});
+            }
+
+            return res.status(200).json({res: user});
+        }catch(err){
+            console.log(err);
+            return res.status(500).json({message: 'error'});
+        }
+    }
+
     async deleteUser(req, res){
         try{
             const userRepository = (await Database).getRepository(User);
@@ -74,6 +101,5 @@ class UserController{
             res.status(500).json({message: 'error'});
         }
     }
-
 }
 export default new UserController();
