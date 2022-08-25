@@ -82,6 +82,15 @@
 
 ---
 
+## **Variáveis de Ambiente**
+- `API_PORT`
+- `TYPEORM_CONNECTION`
+- `TYPEORM_HOST`
+- `TYPEORM_USERNAME`
+- `TYPEORM_PASSWORD`
+- `TYPEORM_DATABASE`
+- `JWT_KEY`
+
 ## **Anotações sobre o banco de dados**
 
 Caso de algum erro parecido com o abaixo:
