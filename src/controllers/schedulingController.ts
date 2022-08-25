@@ -1,6 +1,6 @@
 import { Scheduling } from '../models/modelScheduling';
 import Database from '../database/configDB';
-import { format, parse } from 'date-fns';
+import { format, isBefore, parseISO, addDays, isFuture } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { createHash } from '../utils/hash';
 
@@ -8,6 +8,10 @@ class SchedulingController{
     async createScheduling(req, res){
         const { idUser, title, description, appointmentDate, appointmentTime} = req.body;
         try{
+            if(!isFuture(parseISO(appointmentDate))){
+                return res.status(403).json({message: 'inform a future date!'})
+            }
+
             const scheduling = new Scheduling();
             scheduling.title = title;
             scheduling.description = description;
@@ -54,7 +58,7 @@ class SchedulingController{
 
     async updateScheduling(req, res){
         const {idScheduling, serviceStatus} = req.body;
-        const { id, isAdmin } = req.userReq;
+        const { isAdmin } = req.userReq;
 
         try{
             const schedulingRepository = await (await Database).getRepository(Scheduling)
@@ -69,9 +73,41 @@ class SchedulingController{
             }
             
             schedulingUpdate.serviceStatus = serviceStatus;
-
+            schedulingUpdate.lastChanged = format(new Date(), 'yyyy-MM-dd');
+            
             await schedulingRepository.save(schedulingUpdate);
+            return res.status(200).json({message: 'success'})
+        }catch(err){
 
+            console.log(err);
+            res.status(500).json({message: 'error!'});
+        }
+    }
+
+    async editScheduling(req, res){
+        const {idScheduling, title, description, appointmentDate, appointmentTime} = req.body;
+
+        try{
+            const schedulingRepository = await (await Database).getRepository(Scheduling)
+            const schedulingUpdate = await schedulingRepository.findOneBy({ id: idScheduling });
+
+            if(schedulingUpdate == null){
+                return res.status(404).json({message: 'scheduling not found'})
+            }
+            
+            if(!isBefore(parseISO(schedulingUpdate.lastChanged), new Date())){
+                return res.status(403).json({message: 'Change denied'});
+                
+            }
+
+            schedulingUpdate.title = title;
+            schedulingUpdate.description = description;
+            schedulingUpdate.appointmentDate = appointmentDate;
+            schedulingUpdate.appointmentTime = appointmentTime;
+
+            schedulingUpdate.lastChanged = format(addDays(new Date(), 2), 'yyyy-MM-dd');
+            
+            await schedulingRepository.save(schedulingUpdate);
             return res.status(200).json({message: 'success'})
         }catch(err){
 
