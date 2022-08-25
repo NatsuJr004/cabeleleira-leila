@@ -2,6 +2,8 @@
 [] autenticação
 [] tratamento de erros
 [] login
+[] utilizar date-fns para verificação de datas e horas
+[] implementar função de alteração apenas após dois dias da alteração anterior
 [] etc...
 
 ## Anotações sobre o banco de dados

@@ -1,15 +1,16 @@
 import { User } from '../models/modelUser';
 import Database from '../database/configDB';
-import { createHash } from '../utils/hash';
+import { createHash, compareHash } from '../utils/hash';
+import jwt from 'jsonwebtoken';
 
 class UserController{
     async createUser(req, res){
-        const { name, isAdmin, email, password } = req.body;
+        const { name, email, password } = req.body;
         
         try{
             const newUser = new User();
             newUser.name = name;
-            newUser.isAdmin = isAdmin;
+            newUser.isAdmin = false;
             newUser.email = email;
             
             const hashPassowd = await createHash(password);
@@ -30,6 +31,46 @@ class UserController{
             return  res.status(500).json({message: 'error!'});
         }
 
+    }
+
+    async loginUser(req, res){
+        const { email, password } = req.body;
+
+        try{
+            const userRepository = (await Database).getRepository(User);
+            const user = await userRepository.findOneBy({email: email});
+            
+            if(user == null){
+                return res.status(401).json({message: 'Invalid ail or password!'});
+            }
+
+            if(!await compareHash(password, user.password)){
+                return res.status(401).json({message: 'Invalid ail or password!'});
+            }
+
+            await jwt.sign(
+                {
+                    id: user.id,
+                    name: user.name,
+                    isAdmin: user.isAdmin
+                },
+                process.env.JWT_KEY,
+                { expiresIn: '24h' },
+                (err, token) => {
+                    if(err){
+                        return res.status(500).json({message: 'Error in server!'});
+                    }
+                    return res.status(200).json({
+                            message: 'success',
+                            token: token
+                        })
+                }
+            )
+        }catch(err){
+
+            console.log(err);
+            return  res.status(500).json({message: 'error!'});
+        }
     }
 
     async readAllUsers(req, res){
