@@ -24,7 +24,7 @@ class UserController{
             
             const userRepository = (await Database).getRepository(User);
             await userRepository.save(newUser);
-            return res.status(200).json({message: 'funcionou!'});
+            return res.status(200).json({message: 'success!'});
         }catch(err){
             
             console.log(err);
@@ -76,7 +76,13 @@ class UserController{
     async readAllUsers(req, res){
         try{
             const userRepository = (await Database).getRepository(User);
-            const allUsers = await userRepository.find();
+            const allUsers = await userRepository.find({
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                }
+            });
 
             return res.status(200).json({res: allUsers});
         }catch(err){
@@ -87,7 +93,39 @@ class UserController{
     }
 
     async updateUser(req, res){
+        const { id, isAdmin } = req.body;
+
+        if(!req.userReq.isAdmin){
+            return res.status(401).json({message: 'Unauthorized'});
+        }
+
+        try{
+            const userRepository = (await Database).getRepository(User);
+            const userUpdate = await userRepository.findOneBy({
+                id: id
+            })
+
+            if(userUpdate == null){
+                return res.status(404).json({message: 'user not found'})
+            }
+            
+            userUpdate.isAdmin = isAdmin;
+
+            await userRepository.save(userUpdate);
+            return res.status(200).json({message: 'changed data'});
+        }catch(err){
+
+            console.log(err);
+            return res.status(500).json({message: 'error'});
+        }
+    }
+
+    async editDataUser(req, res){
         const { id, name, email } = req.body;
+
+        if(id != req.userReq.id){
+            return res.status(401).json({message: 'Unauthorized'})
+        }
 
         try{
             const userRepository = (await Database).getRepository(User);
@@ -130,12 +168,16 @@ class UserController{
     }
 
     async deleteUser(req, res){
+        if(!req.userReq.isAdmin){
+            return res.status(401).json({message: 'Unauthorized'})
+        }
+
         try{
             const userRepository = (await Database).getRepository(User);
             const userRemove = await userRepository.findOneBy({id: req.body.id});
 
             if(userRemove == null){
-                return res.status(500).json({message: 'user not found'});
+                return res.status(404).json({message: 'user not found'});
             }
 
             await userRepository.remove(userRemove);
