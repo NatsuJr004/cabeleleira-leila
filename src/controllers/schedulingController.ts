@@ -96,11 +96,16 @@ class SchedulingController{
                 return res.status(404).json({message: 'scheduling not found'});
             }
 
-            if(schedulingRemove[0].user.id !== id || !isAdmin){
-                return res.status(401).json({message: 'Unauthorized'})
+            if(!isAdmin){
+                if( schedulingRemove[0].user.id !== id ){
+                    return res.status(401).json({message: 'Unauthorized'})
+                }else{
+                    await schedulingRepository.remove(schedulingRemove);
+                    return res.status(200).json({message: 'success'});
+                }
             }
-            
-            // await schedulingRepository.remove(schedulingRemove);
+
+            await schedulingRepository.remove(schedulingRemove);
             return res.status(200).json({message: 'success'});
         }catch(err){
 
