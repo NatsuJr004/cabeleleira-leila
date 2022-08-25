@@ -1,8 +1,6 @@
 import { Scheduling } from '../models/modelScheduling';
 import Database from '../database/configDB';
 import { format, isBefore, parseISO, addDays, isFuture, subWeeks } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
-import { createHash } from '../utils/hash';
 import { Raw } from 'typeorm';
 
 class SchedulingController{
