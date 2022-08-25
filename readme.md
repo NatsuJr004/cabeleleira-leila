@@ -91,6 +91,17 @@
 - `TYPEORM_DATABASE`
 - `JWT_KEY`
 
+## **Tecnologias Utilizadas**
+- typescript
+- node
+- typeORM
+- bcrypt
+- date-fns
+- jwt
+- mysql
+- cors
+- ts-node-dev
+
 ## **Anotações sobre o banco de dados**
 
 Caso de algum erro parecido com o abaixo:
