@@ -73,16 +73,35 @@ class SchedulingController{
     }
 
     async deleteScheduling(req, res){
+        const { id, isAdmin } = req.userReq;
+
         try{
             const schedulingRepository = await (await Database).getRepository(Scheduling)
-            const schedulingRemove = await schedulingRepository.findOneBy({id: req.body.id});
+            const schedulingRemove = await schedulingRepository.find({
+                where: {
+                    id: req.body.id
+                },
+                relations: {
+                    user: true
+                },
+                select: {
+                    user: {
+                        id: true,
+                        isAdmin: true,
+                    }
+                }
+            });
             
-            if(schedulingRemove == null){
-                return res.status(500).json({message: 'scheduling not found'});
+            if(schedulingRemove.length == 0){
+                return res.status(404).json({message: 'scheduling not found'});
+            }
+
+            if(schedulingRemove[0].user.id !== id || !isAdmin){
+                return res.status(401).json({message: 'Unauthorized'})
             }
             
-            await schedulingRepository.remove(schedulingRemove);
-            return res.status(200).json({message: 'success'})
+            // await schedulingRepository.remove(schedulingRemove);
+            return res.status(200).json({message: 'success'});
         }catch(err){
 
             console.log(err);
