@@ -8,6 +8,6 @@ schedulingRoutes.get('/scheduling', SchedulingController.readAllScheduling);
 schedulingRoutes.delete('/scheduling', auth, SchedulingController.deleteScheduling);
 schedulingRoutes.put('/scheduling', auth, SchedulingController.updateScheduling);
 schedulingRoutes.put('/scheduling/edit', auth, SchedulingController.editScheduling);
-// editScheduling
+schedulingRoutes.get('/scheduling/historic', auth, SchedulingController.historyScheduling);
 
 export default schedulingRoutes;

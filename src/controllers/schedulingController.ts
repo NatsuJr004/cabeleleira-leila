@@ -1,8 +1,9 @@
 import { Scheduling } from '../models/modelScheduling';
 import Database from '../database/configDB';
-import { format, isBefore, parseISO, addDays, isFuture } from 'date-fns';
+import { format, isBefore, parseISO, addDays, isFuture, subWeeks } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { createHash } from '../utils/hash';
+import { Raw } from 'typeorm';
 
 class SchedulingController{
     async createScheduling(req, res){
@@ -97,7 +98,10 @@ class SchedulingController{
             
             if(!isBefore(parseISO(schedulingUpdate.lastChanged), new Date())){
                 return res.status(403).json({message: 'Change denied'});
-                
+            }
+
+            if(!isFuture(parseISO(appointmentDate))){
+                return res.status(403).json({message: 'inform a future date!'})
             }
 
             schedulingUpdate.title = title;
@@ -109,6 +113,37 @@ class SchedulingController{
             
             await schedulingRepository.save(schedulingUpdate);
             return res.status(200).json({message: 'success'})
+        }catch(err){
+
+            console.log(err);
+            res.status(500).json({message: 'error!'});
+        }
+    }
+
+    async historyScheduling(req, res){
+        const {id} = req.userReq;
+
+        try{
+            const schedulingRepository = (await Database).getRepository(Scheduling);
+            const allScheduling = await schedulingRepository.find({
+                relations: {
+                    user: true
+                },
+                select: {
+                    user: {
+                        id: true
+                    }
+                },
+                where: {
+                    appointmentDate: Raw((AppointmentDate) => `${AppointmentDate} > :date`, { date: (subWeeks(new Date(), 1)) }),
+                    user: {
+                        id: id
+                    }
+                },
+                
+            });
+
+            return res.status(200).json({message: 'success', res: allScheduling});
         }catch(err){
 
             console.log(err);

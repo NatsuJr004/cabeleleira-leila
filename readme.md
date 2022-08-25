@@ -6,6 +6,11 @@
 [] implementar função de alteração apenas após dois dias da alteração anterior
 [] etc...
 
+## Sobre as rotas:
+A rota abaixo irá listar os agendamentos do usuario apartir da ultima semana.
+
+    /scheduling/historic
+
 ## Anotações sobre o banco de dados
 
 caso de algum erro parecido com o abaixo:
