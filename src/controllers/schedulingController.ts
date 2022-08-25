@@ -1,5 +1,7 @@
 import { Scheduling } from '../models/modelScheduling';
 import Database from '../database/configDB';
+import { format, parse } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import { createHash } from '../utils/hash';
 
 class SchedulingController{
@@ -13,6 +15,7 @@ class SchedulingController{
             scheduling.user = idUser;
             scheduling.appointmentDate = appointmentDate;
             scheduling.appointmentTime = appointmentTime;
+            scheduling.lastChanged = format(new Date(), 'yyyy-MM-dd');
 
             const schedulingRepository = (await Database).getRepository(Scheduling);
             await schedulingRepository.save(scheduling);
@@ -51,6 +54,7 @@ class SchedulingController{
 
     async updateScheduling(req, res){
         const {idScheduling, serviceStatus} = req.body;
+        const { id, isAdmin } = req.userReq;
 
         try{
             const schedulingRepository = await (await Database).getRepository(Scheduling)
@@ -58,6 +62,10 @@ class SchedulingController{
 
             if(schedulingUpdate == null){
                 return res.status(404).json({message: 'scheduling not found'})
+            }
+
+            if(!isAdmin){
+                return res.status(401).json({message: 'Unauthorized'});
             }
             
             schedulingUpdate.serviceStatus = serviceStatus;
@@ -98,7 +106,7 @@ class SchedulingController{
 
             if(!isAdmin){
                 if( schedulingRemove[0].user.id !== id ){
-                    return res.status(401).json({message: 'Unauthorized'})
+                    return res.status(401).json({message: 'Unauthorized'});
                 }else{
                     await schedulingRepository.remove(schedulingRemove);
                     return res.status(200).json({message: 'success'});

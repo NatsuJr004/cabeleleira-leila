@@ -6,6 +6,6 @@ import { auth } from '../middleware/middlewareAuth';
 schedulingRoutes.post('/scheduling', SchedulingController.createScheduling);
 schedulingRoutes.get('/scheduling', SchedulingController.readAllScheduling);
 schedulingRoutes.delete('/scheduling', auth, SchedulingController.deleteScheduling);
-schedulingRoutes.put('/scheduling', SchedulingController.updateScheduling);
+schedulingRoutes.put('/scheduling', auth, SchedulingController.updateScheduling);
 
 export default schedulingRoutes;

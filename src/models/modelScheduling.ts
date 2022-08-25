@@ -21,6 +21,9 @@ export class Scheduling{
     @Column()
     appointmentTime: string //hh-mn
 
+    @Column()
+    lastChanged: string
+
     @ManyToOne(() => User, (user) => user.schedulings, {
         onDelete: "CASCADE"
     })
