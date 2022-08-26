@@ -146,6 +146,7 @@
 - mysql
 - cors
 - ts-node-dev
+- insomnia (para testar as rotas durante o desenvolvimento)
 
 ## **Anotações sobre o banco de dados**
 
