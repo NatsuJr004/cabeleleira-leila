@@ -8,6 +8,5 @@ serviceRoutes.get('/service', ServiceController.readAllService);
 serviceRoutes.get('/service/:id', ServiceController.readService);
 serviceRoutes.delete('/service', auth, ServiceController.deleteService);
 serviceRoutes.put('/service/edit', auth, ServiceController.editService);
-// serviceRoutes.get('/service/historic', auth, ServiceController.historyService);
 
 export default serviceRoutes;

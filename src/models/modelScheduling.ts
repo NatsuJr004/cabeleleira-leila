@@ -5,16 +5,16 @@ import { User } from './modelUser';
 export class Scheduling{
     @PrimaryGeneratedColumn()
     id: string
-
-    @Column()
-    title: string
-
+    
     @Column()
     description: string
     
     @Column()
     serviceStatus: string
 
+    @Column()
+    services: string
+    
     @Column()
     appointmentDate: string //yyyy-mm-dd
 

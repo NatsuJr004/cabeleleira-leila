@@ -5,14 +5,18 @@ import { Raw } from 'typeorm';
 
 class SchedulingController{
     async createScheduling(req, res){
-        const { idUser, title, description, appointmentDate, appointmentTime} = req.body;
+        const { idUser, description, idServices, appointmentDate, appointmentTime} = req.body;
         try{
             if(!isFuture(parseISO(appointmentDate))){
                 return res.status(403).json({message: 'inform a future date!'})
             }
 
+            // const sla = 
+            // console.log(sla.split('_/_'));
+            
+
             const scheduling = new Scheduling();
-            scheduling.title = title;
+            (idServices.length != 0 || idServices != "") && (scheduling.services = idServices.join('_/_'));
             scheduling.description = description;
             scheduling.serviceStatus = "pending";
             scheduling.user = idUser;
@@ -84,7 +88,7 @@ class SchedulingController{
     }
 
     async editScheduling(req, res){
-        const {idScheduling, title, description, appointmentDate, appointmentTime} = req.body;
+        const {idScheduling, idServices, description, appointmentDate, appointmentTime} = req.body;
 
         try{
             const schedulingRepository = await (await Database).getRepository(Scheduling)
@@ -102,10 +106,10 @@ class SchedulingController{
                 return res.status(403).json({message: 'inform a future date!'})
             }
 
-            schedulingUpdate.title = title;
-            schedulingUpdate.description = description;
-            schedulingUpdate.appointmentDate = appointmentDate;
-            schedulingUpdate.appointmentTime = appointmentTime;
+            (idServices.length > 0 || idServices != null) && (schedulingUpdate.services = idServices);
+            (description != "") && (schedulingUpdate.description = description);
+            (appointmentDate != "") && (schedulingUpdate.appointmentDate = appointmentDate);
+            (appointmentTime != "") && (schedulingUpdate.appointmentTime = appointmentTime);
 
             schedulingUpdate.lastChanged = format(addDays(new Date(), 2), 'yyyy-MM-dd');
             

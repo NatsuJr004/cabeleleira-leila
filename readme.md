@@ -1,3 +1,11 @@
+## **Utilização**
+ - para utilizar a api execute os passos a seguir: (recomendado o npm instalado na maquina e o typescript)
+ - ``npm i`` - para baixar todas a dependencias e coisas necessárias para a api funcionar
+ - ``npm run dev`` - para testar em local host
+ - ``npm start`` - para executar em um servidor
+ - necessário ter banco de dados mysql instalado na máquina
+ - necessário configurar um arquivo .env com a variáveis de ambiente caso for utilizar em local host, caso for utilizar em servidor configurar as variáveis de ambiente no servidor.
+
 ## **Documentação das rotas**
 
 ### Rota de **LOGIN**
@@ -5,7 +13,7 @@
 `/login`
 - reponsavel por autenticar usuário
 - tipo: **POST**
-- dados a receber: `{ email, password }`
+- a rota deve receber por body: `{ email, password }`
 
 ---
 
@@ -14,7 +22,7 @@
 `/user`
 - responsavel por criar um novo usuário.
 - tipo: **POST**
-- dados a receber: `{ nome, email, password }`
+- a rota deve receber por body: `{ nome, email, password }`
 
 `/users`
 - responsavel por listar todos os usuários.
@@ -28,20 +36,20 @@
 - responsavel por alterar a permissão de admin.
 - tipo: **PUT**
 - somente para admin's
-- dados a receber: `{ id, isAdmin }`
+- a rota deve receber por body: `{ id, isAdmin }`
 - header: `Authorization` com `token` do usuário
 
 `/user/edit`
 - responsavel por alterar informações pessoais do usuário
 - tipo: **PUT**
-- dados a receber: `{ id, name, email }`
+- a rota deve receber por body: `{ id, name, email }`
 - header: `Authorization` com `token` do usuário
 
 `/user`
 - responsavel por deletar um usuário
 - tipo: **DELETE**
 - somente para admin's
-- dados a receber: `{ id }`
+- a rota deve receber por body: `{ id }`
 - header: `Authorization` com `token` do usuário
 
 ---
@@ -59,26 +67,63 @@
 `/scheduling`
 - responsavel por criar um novo agendamento
 - tipo: **POST**
-- dados a receber: `{ idUser, title, description, appointmentDate, appointmentTime }`
+- a rota deve receber por body: `{ idUser, title, description, appointmentDate, appointmentTime }`
 
 `/scheduling`
 - responsavel por alterar o status do serviço
 - tipo: **PUT**
 - apenas para admin's
-- dados a receber: `{ idScheduling, serviceStatus }`
+- a rota deve receber por body: `{ idScheduling, serviceStatus }`
 - header: `Authorization` com `token` do usuário
 
 `/scheduling/edit`
 - responsavel por editar dados de um agendamento
 - tipo: **PUT**
-- dados a receber: `{ idScheduling, title, description, appointmentDate, appointmentTime }`
+- a rota deve receber por body: `{ idScheduling, title, description, appointmentDate, appointmentTime }`
 - header: `Authorization` com `token` do usuário
 
-`/scheduling/edit`
+`/scheduling`
 - responsavel por deletar um agendamento
 - tipo: **DELETE**
-- dados a receber: `{ id }`
+- a rota deve receber por body: `{ id }`
 - header: `Authorization` com `token` do usuário
+
+---
+### Rotas de **Serviços**
+
+`/service`
+- responsavel por listar todos os serviços
+- tipo: **GET**
+- apenas para admin's
+
+`/service/:id`
+- responsavel por listar os dados de um serviço
+- tipo: **GET**
+
+`/service`
+- responsavel por criar um novo serviço
+- tipo: **POST**
+- apenas para admin's
+- a rota deve receber por body: `{ name, description, price, location }`
+
+`/service/edit`
+- responsavel por editar dados de um serviço
+- tipo: **PUT**
+- apenas para admin's
+- a rota deve receber por body: `{ id, name, description, price, location }`
+- header: `Authorization` com `token` do usuário
+
+`/scheduling`
+- responsavel por deletar um agendamento
+- tipo: **DELETE**
+- apenas para admin's
+- a rota deve receber por body: `{ id }`
+- header: `Authorization` com `token` do usuário
+
+---
+## **Obs**
+ - Na tabela de agendamentos o campo ``services`` serve para armazenar o id dos serviços selecionados pelo usuário ao agendar, porém os id's estão formatados em uma string só e separados um do outro através ``_/_``.
+ - Case queire no momento de utilizar os dados desse campo como um array basta fazer: ``.split('_/_')`` e isso irá separar os id's novamente dentro de um array.
 
 ---
 
@@ -113,3 +158,5 @@ Tente concertar com o comando mysql abaixo:
     
 - Onde ```root``` como seu usuário localhostcomo seu URL e passwordcomo sua senha
 - Após o comando acima execute: ```flush privileges```para que atualize os privilégios do usuario
+
+_Desenvolvido com ❤ por Eduardo Junior ( Junior042 )_

@@ -1,7 +1,5 @@
 import { Service } from '../models/modelService';
 import Database from '../database/configDB';
-import { format, isBefore, parseISO, addDays, isFuture, subWeeks } from 'date-fns';
-import { Raw } from 'typeorm';
 
 class ServiceController{
     async createService(req, res){
