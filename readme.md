@@ -160,4 +160,4 @@ Tente concertar com o comando mysql abaixo:
 - Onde ```root``` como seu usuário localhostcomo seu URL e passwordcomo sua senha
 - Após o comando acima execute: ```flush privileges```para que atualize os privilégios do usuario
 
-_Desenvolvido com ❤ por Eduardo Junior ( Junior042 )_
+_Desenvolvido com ❤ por Natsu ( NatsuJr004 )_
